@@ -2,7 +2,7 @@
 import json
 from openai import OpenAI
 from models.sense import Sense, FinalSense
-from providers.ai.base import AIProvider
+from providers.ai.base import AIProvider, serde_json_from_content
 from utils.prompt_loader import load_prompt
 import config
 
@@ -45,5 +45,7 @@ class OpenAIProvider(AIProvider):
             temperature=0.3,
         )
 
-        output = json.loads(response.choices[0].message.content)
-        return FinalSense(**output)
+        content = response.choices[0].message.content
+        print(f"Get content: {content}")
+
+        return serde_json_from_content(content)

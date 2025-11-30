@@ -1,22 +1,21 @@
 # providers/ai/qiniu_provider.py
 import json
-import requests
 from openai import OpenAI
 
 from models.sense import Sense, FinalSense
-from providers.ai.base import AIProvider
+from providers.ai.base import AIProvider, serde_json_from_content
 from utils.prompt_loader import load_prompt
 
 
 class QiniuProvider(AIProvider):
 
     def __init__(
-        self,
-        api_key: str,
-        model: str,
-        base_url: str,
-        system_prompt_path="prompts/ai/gpt-5/system.md",
-        user_prompt_path="prompts/ai/gpt-5/user.md",
+            self,
+            api_key: str,
+            model: str,
+            base_url: str,
+            system_prompt_path="prompts/ai/gpt-5/system.md",
+            user_prompt_path="prompts/ai/gpt-5/user.md",
     ):
         self.api_key = api_key
         self.model = model
@@ -31,7 +30,6 @@ class QiniuProvider(AIProvider):
         self.user_template = load_prompt(user_prompt_path)
 
     def generate(self, word: str, senses: list[Sense]) -> FinalSense:
-
         # 转换 WordNet senses → JSON
         senses_json = json.dumps(
             [s.__dict__ for s in senses],
@@ -56,13 +54,11 @@ class QiniuProvider(AIProvider):
             model=self.model,
             messages=messages,
             stream=False,
-            max_tokens=4096         # 按你提供的示例加入
+            max_tokens=4096  # 按你提供的示例加入
         )
 
         # 统一按 openai 兼容格式解析
         content = response.choices[0].message.content
-        print(f"Get content:{content}")
+        print(f"Get content: {content}")
 
-        result_json = json.loads(content)
-
-        return FinalSense(**result_json)
+        return serde_json_from_content(content)

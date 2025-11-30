@@ -12,6 +12,12 @@ class Sense:
     hypernyms: List[str]
     hyponyms: List[str]
 
+@dataclass
+class OtherPos:
+    pos: str
+    definition: str
+    examples_dict: List[str]
+    examples_ai: List[str]
 
 @dataclass
 class FinalSense:
@@ -23,6 +29,7 @@ class FinalSense:
     hypernyms: List[str]
     hyponyms: List[str]
     synonyms: List[str]
-    examples_wordnet: List[str]
+    examples_dict: List[str]
     examples_ai: List[str]
+    other_pos: List[OtherPos]
     chinese: str

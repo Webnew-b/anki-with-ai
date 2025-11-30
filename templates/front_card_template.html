@@ -1,0 +1,44 @@
+<div class="front-container">
+
+    <div class="word">{{ sense.word }}</div>
+
+    {% if sense.pos %}
+        <div class="pos">{{ sense.pos }}</div>
+    {% endif %}
+
+    {% if sense.definition_simple %}
+        <div class="definition-simple">
+            {{ sense.definition_simple }}
+        </div>
+    {% endif %}
+
+</div>
+
+<style>
+.front-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+    text-align: center;
+    padding: 20px;
+}
+
+.word {
+    font-size: 40px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.pos {
+    font-size: 22px;
+    color: #4a90e2;
+    margin-bottom: 15px;
+}
+
+.definition-simple {
+    font-size: 24px;
+    color: #333;
+}
+</style>

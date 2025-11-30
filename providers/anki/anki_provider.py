@@ -1,5 +1,6 @@
 import requests
 from models.sense import FinalSense
+from utils.template_loader import render_card_html
 
 
 class AnkiProvider:
@@ -10,21 +11,18 @@ class AnkiProvider:
         self.url = url
 
     def add(self, sense: FinalSense):
+        # 调用你之前的 Jinja2 渲染函数
+        front_card = render_card_html(sense, "front_card_template.html")
+        back_content = render_card_html(sense,"back_card_template.html")
 
+        # 构造一个新的 Anki Note
         note = {
             "deckName": self.deck,
             "modelName": self.model,
             "fields": {
-                "Word": sense.word,
-                "Definition": sense.definition,
-                "Definition Simple": sense.definition_simple,
-                "Hypernyms": ", ".join(sense.hypernyms),
-                "Hyponyms": ", ".join(sense.hyponyms),
-                "Synonyms": ", ".join(sense.synonyms),
-                "WordNet Examples": "\n".join(sense.examples_wordnet),
-                "AI Examples": "\n".join(sense.examples_ai),
-                "Chinese": sense.chinese,
-                "POS": sense.pos
+                "Word": sense.word,  # 方便搜索
+                "Front": front_card,  # 主体内容：主义项 + other_pos + CSS
+                "Back":back_content
             },
             "options": {"allowDuplicate": False},
             "tags": ["auto"],
@@ -37,3 +35,4 @@ class AnkiProvider:
         }
 
         requests.post(self.url, json=payload)
+
