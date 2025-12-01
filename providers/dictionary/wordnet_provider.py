@@ -1,13 +1,14 @@
 from nltk.corpus import wordnet as wn
-from typing import List
+from typing import List, Any
 from models.sense import Sense
 from .base import DictionaryProvider
 
+wn: Any  # ← 告诉 pyright: 不要检查 wn 的类型
 
 class WordNetProvider(DictionaryProvider):
 
     def lookup(self, word: str) -> List[Sense]:
-        senses = []
+        senses: List[Sense] = []
 
         synsets = wn.synsets(word)
         synsets = synsets[:10]  # 限制最多10个义项

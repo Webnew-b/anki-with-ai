@@ -5,7 +5,11 @@ from utils.template_loader import render_card_html
 
 class AnkiProvider:
 
-    def __init__(self, deck="English", model="VocabModel",url="http://localhost:8765"):
+    def __init__(self,
+                 deck: str = "English",
+                 model: str = "VocabModel",
+                 url: str = "http://localhost:8765"
+    ):
         self.deck = deck
         self.model = model
         self.url = url

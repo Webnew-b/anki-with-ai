@@ -1,6 +1,15 @@
-# providers/ai/qiniu_provider.py
+from __future__ import annotations
+
 import json
+from typing import List
+
 from openai import OpenAI
+from openai.types.chat import (
+    ChatCompletion,
+    ChatCompletionMessage,
+    ChatCompletionSystemMessageParam,
+    ChatCompletionUserMessageParam,
+)
 
 from models.sense import Sense, FinalSense
 from providers.ai.base import AIProvider, serde_json_from_content
@@ -14,51 +23,58 @@ class QiniuProvider(AIProvider):
             api_key: str,
             model: str,
             base_url: str,
-            system_prompt_path="prompts/ai/gpt-5/system.md",
-            user_prompt_path="prompts/ai/gpt-5/user.md",
-    ):
+            system_prompt_path: str = "prompts/ai/gpt-5/system.md",
+            user_prompt_path: str = "prompts/ai/gpt-5/user.md",
+    ) -> None:
         self.api_key = api_key
         self.model = model
-        self.base_url = base_url or "https://qianwen.qiniuapi.com/v1"
 
+        # 七牛直接兼容 OpenAI，base_url 必须指向七牛
         self.client = OpenAI(
-            base_url=self.base_url,
-            api_key=self.api_key,
+            api_key=api_key,
+            base_url=base_url,
         )
 
         self.system_prompt = load_prompt(system_prompt_path)
         self.user_template = load_prompt(user_prompt_path)
 
-    def generate(self, word: str, senses: list[Sense]) -> FinalSense:
-        # 转换 WordNet senses → JSON
+    def generate(self, word: str, senses: List[Sense]) -> FinalSense:
         senses_json = json.dumps(
             [s.__dict__ for s in senses],
             ensure_ascii=False,
             indent=2,
         )
 
-        # 填充 prompt 模板
         user_prompt = (
             self.user_template
             .replace("{{WORD}}", word)
             .replace("{{SENSES}}", senses_json)
         )
 
-        # 根据你提供的模板，构造 messages
-        messages = [
-            {"role": "system", "content": self.system_prompt},
-            {"role": "user", "content": user_prompt},
+        messages: List[
+            ChatCompletionSystemMessageParam | ChatCompletionUserMessageParam
+            ] = [
+            ChatCompletionSystemMessageParam(
+                role="system",
+                content=self.system_prompt,
+            ),
+            ChatCompletionUserMessageParam(
+                role="user",
+                content=user_prompt,
+            ),
         ]
 
-        response = self.client.chat.completions.create(
+        response: ChatCompletion = self.client.chat.completions.create(
             model=self.model,
             messages=messages,
             stream=False,
-            max_tokens=4096  # 按你提供的示例加入
+            max_tokens=4096,
         )
 
-        # 统一按 openai 兼容格式解析
-        content = response.choices[0].message.content
-        print(f"Get content: {content}")
+        message: ChatCompletionMessage = response.choices[0].message
+        content = message.content
+
+        if content is None:
+            raise ValueError("Qiniu (OpenAI compatible) returned empty content")
 
         return serde_json_from_content(content)

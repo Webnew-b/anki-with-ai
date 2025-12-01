@@ -1,10 +1,11 @@
 # providers/ai/openai_provider.py
 import json
+from typing import cast
+
 from openai import OpenAI
 from models.sense import Sense, FinalSense
 from providers.ai.base import AIProvider, serde_json_from_content
 from utils.prompt_loader import load_prompt
-import config
 
 
 class OpenAIProvider(AIProvider):
@@ -13,8 +14,8 @@ class OpenAIProvider(AIProvider):
         self,
         api_key: str,
         model: str,
-        system_prompt_path="prompts/ai/gpt-5/system.md",
-        user_prompt_path="prompts/ai/gpt-5/user.md",
+        system_prompt_path: str = "prompts/ai/gpt-5/system.md",
+        user_prompt_path: str = "prompts/ai/gpt-5/user.md",
     ):
         self.client = OpenAI(api_key=api_key)
         self.model = model
@@ -45,7 +46,7 @@ class OpenAIProvider(AIProvider):
             temperature=0.3,
         )
 
-        content = response.choices[0].message.content
+        content: str = cast(str, response.choices[0].message.content)
         print(f"Get content: {content}")
 
         return serde_json_from_content(content)
