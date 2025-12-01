@@ -42,7 +42,6 @@ class QiniuProvider(AIProvider):
         senses_json = json.dumps(
             [s.__dict__ for s in senses],
             ensure_ascii=False,
-            indent=2,
         )
 
         user_prompt = (
@@ -77,4 +76,8 @@ class QiniuProvider(AIProvider):
         if content is None:
             raise ValueError("Qiniu (OpenAI compatible) returned empty content")
 
-        return serde_json_from_content(content)
+        print(f"Get result: {content}")
+
+        res = serde_json_from_content(content)
+
+        return res
