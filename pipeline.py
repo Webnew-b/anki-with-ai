@@ -17,7 +17,7 @@ class Pipeline:
         self.anki = anki_provider
 
     def run(self, word: str):
-        print(f"Input word :{str}")
+        print(f"Input word :{word}")
         print("Validating the input word.")
         validate_word(word)
 
