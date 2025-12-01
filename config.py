@@ -33,16 +33,16 @@ def load_config(env_path: str = ".env") -> AppConfig:
     env = dotenv_values(env_path)
 
     ai = AIConfig(
-        api_key=env.get("AI_API_KEY", ""),
-        model=env.get("AI_MODEL", "gpt-5"),
-        provider=env.get("AI_PROVIDER", "openai"),
-        url=env.get("AI_API_URL","")
+        api_key=env.get("AI_API_KEY") or "",
+        model=env.get("AI_MODEL") or "gpt-5",
+        provider=env.get("AI_PROVIDER") or "openai",
+        url=env.get("AI_API_URL") or ""
     )
 
     anki = AnkiConfig(
-        url=env.get("ANKI_CONNECT_URL", "http://localhost:8765"),
-        deck=env.get("ANKI_DECK", "English"),
-        model=env.get("ANKI_MODEL", "VocabModel"),
+        url=env.get("ANKI_CONNECT_URL") or "http://localhost:8765",
+        deck=env.get("ANKI_DECK") or "English",
+        model=env.get("ANKI_MODEL") or "VocabModel",
     )
 
     return AppConfig(ai=ai, anki=anki)
