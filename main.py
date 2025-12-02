@@ -2,8 +2,7 @@ from typing import Any
 
 from nltk.corpus import wordnet as wn
 
-wn:Any
-
+from utils.web import start
 import config
 from pipeline import Pipeline
 from providers.ai.base import AIProvider
@@ -12,26 +11,28 @@ from providers.ai.qiniu_provider import QiniuProvider
 from providers.anki.anki_provider import AnkiProvider
 from providers.dictionary.wordnet_provider import WordNetProvider
 
+wn: Any
+
 
 def init() -> None:
     wn.synsets("test")
 
 
-def init_provider(provider_name: str, config: config.AppConfig) -> AIProvider:
+def init_provider(provider_name: str, cfg: config.AppConfig) -> AIProvider:
     system_prompt_path = f"prompts/{configuration.ai.model}/system.md"
     user_prompt_path = f"prompts/{configuration.ai.model}/user.md"
     if provider_name == "openai":
         return OpenAIProvider(
-            config.ai.api_key,
-            config.ai.model,
+            cfg.ai.api_key,
+            cfg.ai.model,
             system_prompt_path=system_prompt_path,
             user_prompt_path=user_prompt_path,
         )
     elif provider_name == "qiniu":
         return QiniuProvider(
-            config.ai.api_key,
-            config.ai.model,
-            config.ai.url,
+            cfg.ai.api_key,
+            cfg.ai.model,
+            cfg.ai.url,
             system_prompt_path=system_prompt_path,
             user_prompt_path=user_prompt_path,
         )
@@ -40,10 +41,6 @@ def init_provider(provider_name: str, config: config.AppConfig) -> AIProvider:
 
 
 if __name__ == "__main__":
-    import sys
-
-    word = sys.argv[1]
-
     configuration: config.AppConfig = config.load_config()
 
     provider: AIProvider = init_provider("qiniu", configuration)
@@ -58,5 +55,4 @@ if __name__ == "__main__":
         ),
     )
 
-    result = pipe.run(word)
-    print(result)
+    start(pipe)
