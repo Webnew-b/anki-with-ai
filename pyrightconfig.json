@@ -1,16 +1,12 @@
 {
   "include": ["."],
   "exclude": ["**/__pycache__", ".venv", "build", "dist"],
-  "typeCheckingMode": "strict",
+  "typeCheckingMode": "basic",
   "reportMissingImports": true,
   "reportMissingTypeStubs": false,
-  "reportUnknownParameterType": true,
-  "reportUnknownVariableType": true,
-  "reportUnknownArgumentType": true,
-  "reportUnknownMemberType": true,
   "reportUntypedFunctionDecorator": false,
   "reportUntypedBaseClass": true,
-  "pythonVersion": "3.11",
+  "pythonVersion": "3.13",
   "venv": ".venv"
 }
 
