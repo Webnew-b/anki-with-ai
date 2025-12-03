@@ -4,9 +4,10 @@ requires-python = ">=3.13"
 
 [[package]]
 name = "anki-with-ai"
-version = "0.1.0"
+version = "0.1.1"
 source = { virtual = "." }
 dependencies = [
+    { name = "bottle" },
     { name = "jinja2" },
     { name = "nltk" },
     { name = "openai" },
@@ -16,6 +17,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "bottle", specifier = ">=0.13.4" },
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "nltk", specifier = ">=3.9.2" },
     { name = "openai", specifier = ">=2.8.1" },
@@ -42,6 +44,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/16/ce/8a777047513153587e5434fd752e89334ac33e379aa3497db860eeb60377/anyio-4.12.0.tar.gz", hash = "sha256:73c693b567b0c55130c104d0b43a9baf3aa6a31fc6110116509f27bf75e21ec0", size = 228266, upload-time = "2025-11-28T23:37:38.911Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/7f/9c/36c5c37947ebfb8c7f22e0eb6e4d188ee2d53aa3880f3f2744fb894f0cb1/anyio-4.12.0-py3-none-any.whl", hash = "sha256:dad2376a628f98eeca4881fc56cd06affd18f659b17a747d3ff0307ced94b1bb", size = 113362, upload-time = "2025-11-28T23:36:57.897Z" },
+]
+
+[[package]]
+name = "bottle"
+version = "0.13.4"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/7a/71/cca6167c06d00c81375fd668719df245864076d284f7cb46a694cbeb5454/bottle-0.13.4.tar.gz", hash = "sha256:787e78327e12b227938de02248333d788cfe45987edca735f8f88e03472c3f47", size = 98717, upload-time = "2025-06-15T10:08:59.439Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/83/f6/b55ec74cfe68c6584163faa311503c20b0da4c09883a41e8e00d6726c954/bottle-0.13.4-py2.py3-none-any.whl", hash = "sha256:045684fbd2764eac9cdeb824861d1551d113e8b683d8d26e296898d3dd99a12e", size = 103807, upload-time = "2025-06-15T10:08:57.691Z" },
 ]
 
 [[package]]
