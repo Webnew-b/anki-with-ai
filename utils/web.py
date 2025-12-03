@@ -13,6 +13,7 @@ class TaskState(TypedDict):
     word: str
     status: str
     percent: int
+    error: str | None
 
 
 app = Bottle()
@@ -46,6 +47,7 @@ def add_word() -> str:
         word=word,
         status="queued",
         percent=0,
+        error=None
     )
 
     # 创建后台线程（注意类型标注）
@@ -74,11 +76,21 @@ def get_progress(task_id: str) -> str:
 
     # 如果任务失败，前端渲染 error 区块
     if task.get("status") == "error":
-        response.status = 500
+        # response.status = 500
         return template(
             "progress_row_error",
             task_id=task_id,
             word=task["word"],
+            error=task.get("error", "")
+        )
+
+    if task.get("status") == "completed":
+        return template(
+            "progress_row_completed",
+            task_id=task_id,
+            word=task["word"],
+            status=task["status"],
+            percent=task["percent"]
         )
 
     return template(
@@ -109,7 +121,9 @@ def process_task(task_id: str, pipe: pipeline.Pipeline) -> None:
     except Exception as exc:
         TASKS[task_id]["status"] = "error"
         TASKS[task_id]["percent"] = 100
+        TASKS[task_id]["error"] = str(exc)
         print(exc)
+        return
 
     TASKS[task_id]['status'] = 'completed'
     TASKS[task_id]['percent'] = 100

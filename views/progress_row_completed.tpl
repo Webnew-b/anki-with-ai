@@ -1,4 +1,4 @@
-<div id="task-{{task_id}}" hx-get="/progress/{{task_id}}" hx-trigger="every 500ms" hx-swap="outerHTML">
+<div id="task-{{task_id}}" hx-get="/progress/{{task_id}}" hx-trigger="stop" hx-swap="outerHTML">
     <p><b>{{word}}</b> — {{status}}</p>
 
     <div class="progress-container">
